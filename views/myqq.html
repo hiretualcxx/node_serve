@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QQ</title>
+    <style>
+    .wapper{
+        width: 450px;
+        height: 650px;
+        border: 5px solid #666;
+    }
+    </style>
+</head>
+<body>
+    <div class="wapper">
+        <button>发送</button>
+    </div>
+    <script src="/static/javascripts/jQuery-3-5-1.js"></script>
+
+    <script>
+        $('button').on('click',function(){
+            const socket = new WebSocket('ws://127.0.0.28:8080/test');
+        socket.addEventListener('open', function (event) {
+    socket.send('111');
+});
+
+socket.addEventListener('message', function (event) {
+    console.log('Message from server ', event.data);
+});
+
+        })
+       
+    </script>
+</body>
+</html>

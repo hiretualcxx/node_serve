@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>获取页面平均分</title>
+    <style>
+        .outbox {
+            width: 85%;
+            max-width: 1080px;
+            margin: 50px auto;
+            ;
+        }
+
+        .outbox .tip {
+
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 36px;
+            color: #000000;
+        }
+
+        form .pageurl {
+            border: none;
+            border-bottom: 1px solid #999;
+            outline: none;
+            font-size: 21px;
+            line-height: 30px;
+            width: 50%;
+            margin: 25px 0;
+            padding: 15px 0 5px 15px;
+        }
+
+        form .run {
+            width: 75px;
+            height: 35px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            text-align: center;
+            line-height: 35px;
+            border: none;
+            background-color: blue;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .result .title {
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 36px;
+            color: #000000;
+        }
+
+        .result table {
+            width: 100%;
+            color: #000;
+        }
+
+        .result table tr {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .result table tr * {
+            text-align: left;
+        }
+
+        .result table tr th,
+        .result table tr td {
+            flex: 1 1 11%;
+        }
+
+        .result table .red {
+            color: #f40;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="outbox">
+        <div class="tip">
+            输入页面链接
+        </div>
+        <form action="javascript:run();">
+            <input type="text" class="pageurl">
+            <button class="run">解析</button>
+        </form>
+        <div class="result">
+            <p class="title"> <a href="" target="_blank" class="url">hireez.com </a> </span> 结果如下：</p>
+            <div class="resultbox">
+                <table>
+                    <tr>
+                        <th>设备</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>最后得分</th>
+                    </tr>
+                   <tr class="num">
+
+                   </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="http://192.168.100.105:8080/static/javascripts/jQuery-3-5-1.js"></script>
+    <script>
+        var errnum = 0;
+        var num = {
+            desktop:[],
+            mobile:[]
+        }
+
+        function re_web_dveqapi(u, strategy) {
+            var url =
+                `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(u)}&strategy=${strategy}&key=AIzaSyA5WXa9qjieZHQLqFVwMYeubKyNLehbGqw`
+            fetch(url)
+                .then(response => response.json())
+                .then(d => {
+                    var Performance = d.lighthouseResult.categories.performance.score;
+                    num[strategy].push(Performance);
+                    if (num[strategy].length < 5) {
+                        re_web_dveqapi(u, strategy)
+                    }else if(num.desktop.concat(num.mobile).length >= 10){
+                        shownum();
+                    }
+                })
+                .catch((err) => {
+                    errnum++;
+                    if (errnum > 10) {
+                        location.reload();
+                        alert('出错啦,让接口歇会吧！！！')
+                        return;
+                    }
+                    re_web_dveqapi(u,strategy);
+
+                });
+        }
+
+function shownum(){
+    var pcstr = '<td>desktop</td>';
+    var mobilestr = '<td>mobile</td>';
+    for(var i=0;i<5;i++){
+        pcstr += `<td>${num.desktop[i]}</td>`;
+        mobilestr += `<td>${num.mobile[i]}</td>`;
+    };
+    $('table tbody .num').append(pcstr).append(mobilestr);
+
+}
+
+        function run() {
+            
+            var url = $('input.pageurl').val();
+            re_web_dveqapi(url,'desktop');
+            re_web_dveqapi(url,'mobile');
+
+        }
+    </script>
+</body>
+
+</html>

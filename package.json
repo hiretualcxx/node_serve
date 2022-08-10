@@ -1,0 +1,21 @@
+{
+  "name": "node_serve",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "express-ws": "^5.0.2",
+    "morgan": "^1.10.0",
+    "node-cmd": "^5.0.0",
+    "serve-favicon": "^2.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node enter.js"
+  },
+  "author": "cxx",
+  "license": "ISC"
+}
